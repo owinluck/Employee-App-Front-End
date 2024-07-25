@@ -3,17 +3,27 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { NavComponent } from '../../common/nav/nav.component';
 
 @Component({
   selector: 'app-view-all-employee',
   standalone: true,
-  imports: [HttpClientModule,FormsModule,CommonModule,],
+  imports: [HttpClientModule,FormsModule,CommonModule,NavComponent],
   templateUrl: './view-all-employee.component.html',
   styleUrl: './view-all-employee.component.css'
 })
 export class ViewAllEmployeeComponent {
 
   public employeeList:any;
+  public selectedEmployee={
+      id:"",
+      name:"",
+      email:"",
+      departmentId:"",
+      rollId:""
+  };  
+
+
 
   constructor(private http:HttpClient){
 
@@ -69,8 +79,19 @@ export class ViewAllEmployeeComponent {
         });
       }
     });
+  }
+
+  updateEmployee(employee:any){
+    
+    this.selectedEmployee={
+      id:employee.id,
+      name:employee.firstName+" "+employee.lastName,
+      email:employee.email,
+      departmentId:employee.departmentId,
+      rollId:employee.rollId
+    };
 
     
-    
+    console.log(employee);
   }
 }
