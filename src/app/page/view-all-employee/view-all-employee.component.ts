@@ -17,7 +17,8 @@ export class ViewAllEmployeeComponent {
   public employeeList:any;
   public selectedEmployee={
       id:"",
-      name:"",
+      firstName:"",
+      lastName:"",
       email:"",
       departmentId:"",
       rollId:""
@@ -83,15 +84,63 @@ export class ViewAllEmployeeComponent {
 
   updateEmployee(employee:any){
     
-    this.selectedEmployee={
-      id:employee.id,
-      name:employee.firstName+" "+employee.lastName,
-      email:employee.email,
-      departmentId:employee.departmentId,
-      rollId:employee.rollId
-    };
+    if (employee!=null) {
+      this.selectedEmployee={
+        id:employee.id,
+        firstName:employee.firstName,
+        lastName:employee.lastName,
+        email:employee.email,
+        departmentId:employee.departmentId,
+        rollId:employee.rollId
+      }
+    }
 
-    
-    console.log(employee);
+    console.log(this.selectedEmployee);
+  }
+
+  saveUpadateEmployee(){
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger"
+      },
+      buttonsStyling: false
+    });
+    swalWithBootstrapButtons.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Update it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+        this.http.put("http://localhost:8080/emp-controller/update-employee",this.selectedEmployee).subscribe(res=>{
+          console.log("Updated");
+          
+          swalWithBootstrapButtons.fire({
+          
+            title: "Updated!",
+            text: "Your file has been Updated.",
+            icon: "success",
+            
+          });
+        })
+        
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire({
+          title: "Cancelled",
+          text: "Your imaginary file is safe :)",
+          icon: "error"
+        });
+      }
+    }); 
   }
 }
+
+
